@@ -1,0 +1,5 @@
+clear, clc;
+
+startHeight = input("Please enter your starting height");
+
+endingH = (g*startHeight - .5*(10)^2)/g;
