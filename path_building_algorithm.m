@@ -1,12 +1,28 @@
 clear;clc;
 
-% Start by getting two points from user input, then generate a third point
-% that has x between them and y below them. For now, the x-endpoints will
-% be set at 0 & 60.
+% Start by getting five points from user input, each representing a 
+% peak/starting point. Set the final height to the highest peak minus four
+% so that the final velocity is less than 10 m/s 
 y0(1)=input('Please enter the starting height of the rollercoaster. Enter this as a scalar greater than 0.');
 y0(3)=input('Please enter the height of the first peak of the rollercoaster. Enter this as a scalar greater than 0.');
-x0=[0,randi([20,100]),120];
+y0(5)=input('Please enter the height of the second peak of the rollercoaster. Enter this as a scalar greater than 0.');
+y0(7)=input('Please enter the height of the third peak of the rollercoaster. Enter this as a scalar greater than 0.');
+y0(9)=input('Please enter the height of the last peak of the rollercoaster. Enter this as a scalar greater than 0.');
+y0(11)=max(y0)-4;
+
+% Then, generate x coordinates. The peaks will be located every 60 meters
+% (to make sure the coaster is at least 300 m). In between each peak, we
+% have a random x-coordinate that is between 20 & 40 m from each peak.
+x0=[0,randi([20,40]),60,randi([80,100]),120,randi([140,160]),180,randi([200,220]),240,randi([260,280]),300];
+
+% Now, we generate troughs. The height of the troughs is located at a
+% random location that is below the lower of the two peaks that it sits
+% between.
 y0(2)=randi([0,min([y0(1),y0(3)])]);
+y0(4)=randi([0,min([y0(3),y0(5)])]);
+y0(6)=randi([0,min([y0(5),y0(7)])]);
+y0(8)=randi([0,min([y0(7),y0(9)])]);
+y0(10)=randi([0,min([y0(9),y0(11)])]);
 
 % Now, we use a assume that the rollercoaster path p(x) is modeled by a
 % polynomial. As I will describe, we have 6 conditions that need to be met,
@@ -23,6 +39,10 @@ y0(2)=randi([0,min([y0(1),y0(3)])]);
 % ((A)/5.*x0(2).^5+(b-A.*(x0(1)+x0(2)+x0(3))/4.*x0(2).^4+(A*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-b*(x0(1)+x0(2)+x0(3)))/3.*x0(2).^3+(b*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-A*x0(1)*x0(2)*x0(3))/2.*x0(2).^2-b*x0(1)*x0(2)*x0(3).*x0(2))-((A)/5.*x0(1).^5+(b-A.*(x0(1)+x0(2)+x0(3))/4.*x0(1).^4+(A*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-b)/3.*x0(1).^3+(b*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-A*x0(1)*x0(2)*x0(3))/2.*x0(1).^2-b*x0(1)*x0(2)*x0(3).*x0(1))+y0(1)-y0(2)=0
 % Equation 2:
 % ((A)/5.*x0(3).^5+(b-A.*(x0(1)+x0(2)+x0(3))/4.*x0(3).^4+(A*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-b*(x0(1)+x0(2)+x0(3)))/3.*x0(3).^3+(b*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-A*x0(1)*x0(2)*x0(3))/2.*x0(3).^2-b*x0(1)*x0(2)*x0(3).*x0(3))-((A)/5.*x0(2).^5+(b-A.*(x0(1)+x0(2)+x0(3))/4.*x0(2).^4+(A*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-b)/3.*x0(2).^3+(b*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-A*x0(1)*x0(2)*x0(3))/2.*x0(2).^2-b*x0(1)*x0(2)*x0(3).*x0(2))+y0(2)-y0(3)=0
+% This process must be carried out between each peak. We will make a for
+% loop to do this.
+
+
 
 syms A b;
 
