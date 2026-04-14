@@ -42,31 +42,41 @@ y0(10)=randi([0,min([y0(9),y0(11)])]);
 % This process must be carried out between each peak. We will make a for
 % loop to do this.
 
+for j=1:2:9
 
+    syms A b;
+    
+    % Helpful intermediate sums to keep the equations readable
+    S1 = x0(j) + x0(j+1) + x0(j+2);
+    S2 = x0(j)*x0(j+1) + x0(j+1)*x0(j+2) + x0(j+2)*x0(j);
+    S3 = x0(j)*x0(j+1)*x0(j+2);
+    
+    % Define the indefinite integral WITHOUT the constant of integration
+    F = @(x, A_sym, b_sym) (A_sym/5).*x.^5 + (b_sym-A_sym*S1)/4.*x.^4 + (A_sym*S2-b_sym*S1)/3.*x.^3 + (b_sym*S2-A_sym*S3)/2.*x.^2 - b_sym*S3.*x;
+    
+    % The true expression shifts the curve so it evaluates exactly to y0(j) when x = x0(j)
+    expr = @(x, A_sym, b_sym) F(x, A_sym, b_sym) - F(x0(j), A_sym, b_sym) + y0(j);
+    
+    % Set up the equations: y(x0(j+1)) = y0(j+1) & y(x0(j+2)) = y0(j+2)
+    eq1 = expr(x0(j+1),A,b) == y0(j+1);
+    eq2 = expr(x0(j+2),A,b) == y0(j+2);
+    
+    % Now, we need to solve the system of equations for A & b
+    sol = solve([eq1, eq2], [A, b]);
+    A_val = double(sol.A);
+    b_val = double(sol.b);
+    
+    % Calculate the correct constant term (the y-intercept) for the polynomial array
+    C_val = y0(j) - F(x0(j), A_val, b_val);
+    
+    % Create the polynomial vector using the clean S1, S2, S3 variables
+    p = [A_val/5, (b_val-A_val*S1)/4, (A_val*S2-b_val*S1)/3, (b_val*S2-A_val*S3)/2, -b_val*S3, C_val];
+    
+    % Create space and evaluate
+    x_space(j,:) = linspace(x0(j),x0(j+2),100);
+    y(j,:)=polyval(p,x_space(j,:));
 
-syms A b;
+end
 
-% Helpful intermediate sums to keep the equations readable
-S1 = x0(1) + x0(2) + x0(3);
-S2 = x0(1)*x0(2) + x0(2)*x0(3) + x0(3)*x0(1);
-S3 = x0(1)*x0(2)*x0(3);
-
-% Now we define an expression to avoid typing out the entire long equations
-% twice.
-expr = @(x, A_sym, b_sym) (A_sym/5).*x.^5 + (b_sym-A_sym*S1)/4.*x.^4 + (A_sym*S2-b_sym*S1)/3.*x.^3 + (b_sym*S2-A_sym*S3)/2.*x.^2 - b_sym*S3.*x+y0(1);
-
-% Set up the equations: y(x0(2)) = y0(2) & y(x0(3)) = y0(3)
-eq1 = expr(x0(2),A,b) == y0(2);
-eq2 = expr(x0(3),A,b) == y0(3);
-
-% Now, we need to solve the system of equations for A & b
-sol = solve([eq1, eq2], [A, b]);
-A_val = double(sol.A);
-b_val = double(sol.b);
-
-% Now, we create the polynomial and plot it alongside the user-requested
-% points
-p = [A_val/5,(b_val-A_val*(x0(1)+x0(2)+x0(3)))/4,(A_val*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-b_val*(x0(1)+x0(2)+x0(3)))/3,(b_val*(x0(1)*x0(2)+x0(2)*x0(3)+x0(3)*x0(1))-A_val*x0(1)*x0(2)*x0(3))/2,-b_val*x0(1)*x0(2)*x0(3),y0(1)];
-x_space = linspace(x0(1),x0(3),100);
-y=polyval(p,x_space);
-plot(x_space,y,x0,y0,'*')
+% Finally, we plot all of the polynomials as a piecewise function
+plot(x0,y0,'*',x_space(1,:),y(1,:),x_space(3,:),y(3,:),x_space(5,:),y(5,:),x_space(7,:),y(7,:),x_space(9,:),y(9,:))
