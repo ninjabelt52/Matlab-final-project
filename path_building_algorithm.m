@@ -4,12 +4,19 @@ while true
     % Start by getting five points from user input, each representing a 
     % peak/starting point. Set the final height to the highest peak minus four
     % so that the final velocity is less than 10 m/s 
-    y0(1)=input('Please enter the starting height of the rollercoaster. Enter this as a scalar greater than 0.');
-    y0(3)=input('Please enter the height of the first peak of the rollercoaster. Enter this as a scalar greater than 0.');
-    y0(5)=input('Please enter the height of the second peak of the rollercoaster. Enter this as a scalar greater than 0.');
-    y0(7)=input('Please enter the height of the third peak of the rollercoaster. Enter this as a scalar greater than 0.');
-    y0(9)=input('Please enter the height of the last peak of the rollercoaster. Enter this as a scalar greater than 0.');
-    y0(11)=max(y0)-4;
+    % y0(1)=input('Please enter the starting height of the rollercoaster. Enter this as a scalar greater than 0.');
+    % y0(3)=input('Please enter the height of the first peak of the rollercoaster. Enter this as a scalar greater than 0.');
+    % y0(5)=input('Please enter the height of the second peak of the rollercoaster. Enter this as a scalar greater than 0.');
+    % y0(7)=input('Please enter the height of the third peak of the rollercoaster. Enter this as a scalar greater than 0.');
+    % y0(9)=input('Please enter the height of the last peak of the rollercoaster. Enter this as a scalar greater than 0.');
+    % y0(11)=max(y0)-4;
+    for i = 1:2:11
+        disp(i)
+        y0(i)=randi(30);
+    end
+
+    y0([1,find(max(y0))])=y0([find(max(y0)),1]);
+
     
     % Then, generate x coordinates. The peaks will be located every 60 meters
     % (to make sure the coaster is at least 300 m). In between each peak, we
@@ -87,5 +94,5 @@ while true
     
     % Finally, we plot all of the polynomials as a piecewise function
     % plot(x0,y0,'*',x_space(1,:),y(1,:),x_space(3,:),y(3,:),x_space(5,:),y(5,:),x_space(7,:),y(7,:),x_space(9,:),y(9,:))
-    waitforbuttonpress("c")
+    waitforbuttonpress()
 end
