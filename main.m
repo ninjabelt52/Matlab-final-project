@@ -105,12 +105,16 @@ for j=1:2:9
     y(j,:)=polyval(p,x_space(j,:));
 
 end
-figure;
+
+% Now, we calculate the kinetic energy, and thus speed, at each point.
+m=100; g=9.81;
+U = m * g * y;
+T = max(U) - U;
+v = sqrt(2*T/m)
+
 % Finally, we plot all of the polynomials as a piecewise function
+figure;
 plot(x0,y0,'*',x_space(1,:),y(1,:),x_space(3,:),y(3,:),x_space(5,:),y(5,:),x_space(7,:),y(7,:),x_space(9,:),y(9,:))
-
-
-% plot(xPeaks, yPeaks, 'bo-', 'LineWidth', 1.5, 'MarkerSize', 8);
 grid on;
 xlabel('Horizontal Distance (m)');
 ylabel('Height (m)');
