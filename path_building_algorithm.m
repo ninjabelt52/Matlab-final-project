@@ -42,6 +42,7 @@ y0(10)=randi([0,min([y0(9),y0(11)])]);
 % This process must be carried out between each peak. We will make a for
 % loop to do this.
 
+for j=1:2:9
 
     syms A b;
     
