@@ -21,11 +21,11 @@ for i = 2:5
 end
 
 m = 10;   % kg
-v = 10;   % m/s
+V = 10;   % m/s
 g = 9.81; % m/s^2
-endingH = (g*yPeaks(1) - .5*(v)^2)/g;
+endingH = (g*yPeaks(1) - .5*(V)^2)/g;
 
-finalKE = .5*m*(v)^2;
+finalKE = .5*m*(V)^2;
 finalPE = m*g*yPeaks(1);
 
 % Start by getting five points from user input, each representing a 
@@ -106,17 +106,64 @@ for j=1:2:9
 
 end
 
-% Now, we calculate the kinetic energy, and thus speed, at each point.
+% --- 1. KINETIC ENERGY & SPEED CALCULATION ---
+% (This turns v into an array of 500 speeds so the animation works)
 m=100; g=9.81;
 U = m * g * y;
 T = max(U) - U;
 v = sqrt(2*T/m);
 
-% Finally, we plot all of the polynomials as a piecewise function
+% --- 2. PLOT THE TRACK ---
 figure;
 plot(x0,y0,'*',x_space,y)
 grid on;
 xlabel('Horizontal Distance (m)');
 ylabel('Height (m)');
-title('Roller Coaster Peak Inputs');
-legend('Peak Heights', 'Location', 'best');
+legend('Peaks & Troughs', 'Location', 'best');
+
+% --- 3. FIXED FPS ANIMATION ---
+hold on;
+cart = plot(x_space(1), y(1), 'r.', 'MarkerSize', 40);
+
+% Force row vectors just to be absolutely safe against dimension mismatches
+x_space = x_space(:)';
+y = y(:)';
+v = v(:)';
+
+% Calculate arc length and average velocity
+dx = diff(x_space);
+dy = diff(y);
+ds = sqrt(dx.^2 + dy.^2);
+
+v_avg = (v(1:end-1) + v(2:end)) / 2;
+v_avg(v_avg == 0) = 0.01; % Prevent division by zero
+
+% Calculate time intervals and cumulative time array
+dt = ds ./ v_avg;
+t_cum = [0, cumsum(dt)]; 
+
+% Create a fixed time array for a smooth 30 FPS animation
+fps = 30;
+dt_frame = 1 / fps;
+t_anim = 0 : dt_frame : t_cum(end); 
+
+% Interpolate X, Y, and Velocity at these exact time intervals
+[t_unique, idx] = unique(t_cum);
+x_anim = interp1(t_unique, x_space(idx), t_anim, 'pchip');
+y_anim = interp1(t_unique, y(idx), t_anim, 'pchip');
+v_anim = interp1(t_unique, v(idx), t_anim, 'pchip');
+
+title_obj = title(sprintf('Roller Coaster Speed: %.1f m/s', v_anim(1)));
+disp('Starting fixed-timestep animation...');
+
+% Run the animation loop
+for i = 1:length(t_anim)
+    
+    set(cart, 'XData', x_anim(i), 'YData', y_anim(i));
+    set(title_obj, 'String', sprintf('Roller Coaster Speed: %.1f m/s', v_anim(i)));
+    
+    drawnow; 
+    pause(dt_frame); 
+end
+
+disp('Animation complete!');
