@@ -101,8 +101,8 @@ for j=1:2:9
     p = [A_val/5, (b_val-A_val*S1)/4, (A_val*S2-b_val*S1)/3, (b_val*S2-A_val*S3)/2, -b_val*S3, C_val];
     
     % Create space and evaluate
-    x_space(j,:) = linspace(x0(j),x0(j+2),100);
-    y(j,:)=polyval(p,x_space(j,:));
+    x_space((50*j-49):(50*j+50)) = linspace(x0(j),x0(j+2),100);
+    y((50*j-49):(50*j+50))=polyval(p,x_space((50*j-49):(50*j+50)));
 
 end
 
@@ -110,11 +110,11 @@ end
 m=100; g=9.81;
 U = m * g * y;
 T = max(U) - U;
-v = sqrt(2*T/m)
+v = sqrt(2*T/m);
 
 % Finally, we plot all of the polynomials as a piecewise function
 figure;
-plot(x0,y0,'*',x_space(1,:),y(1,:),x_space(3,:),y(3,:),x_space(5,:),y(5,:),x_space(7,:),y(7,:),x_space(9,:),y(9,:))
+plot(x0,y0,'*',x_space,y)
 grid on;
 xlabel('Horizontal Distance (m)');
 ylabel('Height (m)');
