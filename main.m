@@ -21,7 +21,7 @@ for i = 2:5
 end
 
 m = 10;   % kg
-V = 10;   % m/s
+V = 9;   % m/s
 g = 9.81; % m/s^2
 endingH = (g*yPeaks(1) - .5*(V)^2)/g;
 
@@ -155,6 +155,11 @@ v_anim = interp1(t_unique, v(idx), t_anim, 'pchip');
 
 title_obj = title(sprintf('Roller Coaster Speed: %.1f m/s', v_anim(1)));
 disp('Starting fixed-timestep animation...');
+
+% Display initial PE and final PE and KE
+blah = sprintf("MAX PE = %fJ\nFINAL KE = %fJ",g*yPeaks(1),finalKE);
+
+text(150,y0(1)-10,blah)
 
 % Run the animation loop
 for i = 1:length(t_anim)
