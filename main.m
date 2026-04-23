@@ -8,8 +8,8 @@ yPeaks = zeros(1,5);
 for i = 1:5
     yPeaks(i) = input(['Enter height for peak ', num2str(i), ': ']);
     
-    while yPeaks(i) <= 0
-        disp('Invalid input. Height must be greater than 0.');
+    while yPeaks(i) <= 0 || (i > 1 && yPeaks(i) > yPeaks(1))
+        disp('Invalid input. Height must be greater than 0 and not exceed the first peak.');
         yPeaks(i) = input(['Enter height for peak ', num2str(i), ': ']);
     end
 end
