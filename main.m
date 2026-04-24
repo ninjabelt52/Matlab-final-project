@@ -157,9 +157,9 @@ title_obj = title(sprintf('Roller Coaster Speed: %.1f m/s', v_anim(1)));
 disp('Starting fixed-timestep animation...');
 
 % Display initial PE and final PE and KE
-blah = sprintf("MAX PE = %fJ\nFINAL KE = %fJ",g*yPeaks(1),finalKE);
+energyDisp = sprintf("MAX PE = %fJ\nFINAL KE = %fJ\nFinal Velocity = %f m/s",g*yPeaks(1),finalKE, v_anim(length(t_anim)));
 
-text(150,y0(1)-10,blah)
+text(150,y0(1)-10,energyDisp)
 
 % Run the animation loop
 for i = 1:length(t_anim)
