@@ -1,32 +1,48 @@
 clear, clc;
 close all;
 
+%% User input section of the code. Made by Fielding McKnight
 disp('Enter the heights of the five roller coaster peaks.');
 
 yPeaks = zeros(1,5);
 
+% Repeatedly ask the user for input on the heights of 5 peaks on the roller
+% coaster.
 for i = 1:5
     yPeaks(i) = input(['Enter height for peak ', num2str(i), ': ']);
     
+    % If the user enters a peak height that is greater than the first peak
+    % height, the roller coaster will stall out, and will be unable to
+    % complete the track. Because of this , we reject any invalid input and
+    % ask the user for a valid, smaller number. Additionally, a peak height
+    % smaller than zero will result in a bug in our rail trajectory code,
+    % so we also reject input that is below a height of 0.
     while yPeaks(i) <= 0 || (i > 1 && yPeaks(i) > yPeaks(1))
         disp('Invalid input. Height must be greater than 0 and not exceed the first peak.');
         yPeaks(i) = input(['Enter height for peak ', num2str(i), ': ']);
     end
 end
 
+% Choose locations for the peaks, ranging from 20 to 60 meters from the
+% last position.
 xPeaks(1) = randi([0,20]);
 
 for i = 2:5
     xPeaks(i) = xPeaks(i-1) + randi([20,60]);
 end
 
+%% Final and initial kinetic and potential energy calculation. Created by Boen Kelly
+
+%Caluclate the ending height so that the final velocity is 9 m/s
 m = 10;   % kg
 V = 9;   % m/s
 g = 9.81; % m/s^2
-endingH = (g*yPeaks(1) - .5*(V)^2)/g;
+endingH = (g*yPeaks(1) - .5*(V)^2)/g; %m
 
 finalKE = .5*m*(V)^2;
 finalPE = m*g*yPeaks(1);
+
+%% Roller coaster path generation code
 
 % Start by getting five points from user input, each representing a 
 % peak/starting point. Set the final height to the highest peak minus four
